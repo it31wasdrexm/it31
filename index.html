@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dumplab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="site-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#home" aria-label="Home" data-tab="home">Dumplab</a>
+        <nav class="nav" aria-label="Основная навигация">
+          <a class="nav-link active" href="#home" data-tab="home">Home</a>
+          <a class="nav-link" href="#about" data-tab="about">About</a>
+          <a class="nav-link" href="#project" data-tab="project">Project</a>
+          <a class="nav-link" href="#contact" data-tab="contact">Contact</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="home" class="page home-page active" aria-labelledby="home-title">
+          <h1 id="home-title" class="sr-only">Home</h1>
+          <div class="home-photo" role="img" aria-label="Фотография на главной странице"></div>
+        </section>
+
+        <section id="about" class="page text-page" aria-labelledby="about-title">
+          <h1 id="about-title">About</h1>
+          <div class="text-copy">
+            <p>Dump Lab is a collection of modern mini apps built to simplify everyday digital life.
+From organizing your thoughts with TaskDump, to exploring crypto on CryptoDump, or reading books inside BooksDump — every product is designed to be fast, minimal, and easy to use.</p>
+          </div>
+        </section>
+
+        <section id="project" class="page text-page" aria-labelledby="project-title">
+          <h1 id="project-title">Project</h1>
+          <div class="projects-list">
+            <article class="project-item">
+              <div class="project-info">
+                <span class="project-number">01</span>
+                <a class="project-title" href="https://t.me/BkDump_bot" target="_blank" rel="noreferrer">booksdump</a>
+              </div>
+              <div class="project-demo">
+                <img src="assets/booksdump.gif" alt="Booksdump demo">
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="contact" class="page text-page" aria-labelledby="contact-title">
+          <h1 id="contact-title">Contact</h1>
+          <div class="text-copy">
+            <p>Email:roman15fn@gmail.com</p>
+            <p>Instagram / GitHub: @it31wasdrexm</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const tabTriggers = [...document.querySelectorAll("[data-tab]")];
+      const navLinks = [...document.querySelectorAll(".nav-link")];
+      const pages = [...document.querySelectorAll(".page")];
+      const brand = document.querySelector(".brand");
+      const pageTitles = {
+        home: "Dumplab",
+        about: "About",
+        project: "Project",
+        contact: "Contact",
+      };
+
+      function showTab(tabName) {
+        const selectedTab = document.getElementById(tabName) ? tabName : "home";
+        const hash = "#" + selectedTab;
+
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === hash);
+        });
+
+        pages.forEach((page) => {
+          page.classList.toggle("active", page.id === selectedTab);
+        });
+
+        brand.textContent = pageTitles[selectedTab];
+        brand.setAttribute("aria-label", pageTitles[selectedTab]);
+        document.title = pageTitles[selectedTab];
+      }
+
+      tabTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", (event) => {
+          event.preventDefault();
+          const tabName = trigger.dataset.tab;
+          history.replaceState(null, "", "#" + tabName);
+          showTab(tabName);
+        });
+      });
+
+      window.addEventListener("hashchange", () => showTab(location.hash.slice(1)));
+      showTab(location.hash.slice(1) || "home");
+    </script>
+  </body>
+</html>
