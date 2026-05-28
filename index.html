@@ -36,17 +36,46 @@
 
         <section id="project" class="page text-page" aria-labelledby="project-title">
           <h1 id="project-title">Project</h1>
-          <div class="projects-list">
-            <article class="project-item">
-              <div class="project-info">
-                <span class="project-number">01</span>
-                <a class="project-title" href="https://t.me/BkDump_bot" target="_blank" rel="noreferrer">booksdump</a>
-              </div>
-              <div class="project-demo">
-                <img src="assets/booksdump.gif" alt="Booksdump demo">
-              </div>
-            </article>
+          <div class="projects-view active" data-project-view="list">
+            <ol class="projects-index">
+              <li>
+                <button class="project-trigger" type="button" data-project-open="booksdump">
+                  <span>01</span>
+                  booksdump
+                </button>
+              </li>
+              <li>
+                <button class="project-trigger" type="button" data-project-open="dumpstore">
+                  <span>02</span>
+                  dumpStore
+                </button>
+              </li>
+            </ol>
           </div>
+          <article class="project-detail" data-project-detail="booksdump" hidden>
+            <button class="project-back" type="button" data-project-back>Back</button>
+            <div class="project-copy">
+              <span class="project-number">01</span>
+              <h2>booksdump</h2>
+              <p>A Telegram mini app for comfortable book reading directly inside Telegram. You can upload a book from Google Drive using a share link, or send the file straight to the bot and continue reading from there.</p>
+              <a class="project-link" href="https://t.me/BkDump_bot" target="_blank" rel="noreferrer">Open project</a>
+            </div>
+            <div class="project-demo">
+              <img src="assets/booksdump.gif" alt="Booksdump demo">
+            </div>
+          </article>
+          <article class="project-detail" data-project-detail="dumpstore" hidden>
+            <button class="project-back" type="button" data-project-back>Back</button>
+            <div class="project-copy">
+              <span class="project-number">02</span>
+              <h2>dumpStore</h2>
+              <p>An online store for selling items through Telegram. Product and order updates are delivered to users through bot messages, including status changes like when an order has arrived.</p>
+              <a class="project-link" href="https://t.me/it31wasdrexmbot" target="_blank" rel="noreferrer">Open project</a>
+            </div>
+            <div class="project-demo">
+              <img src="assets/dump.gif" alt="dumpStore demo">
+            </div>
+          </article>
         </section>
 
         <section id="contact" class="page text-page" aria-labelledby="contact-title">
@@ -64,6 +93,8 @@
       const navLinks = [...document.querySelectorAll(".nav-link")];
       const pages = [...document.querySelectorAll(".page")];
       const brand = document.querySelector(".brand");
+      const projectList = document.querySelector("[data-project-view='list']");
+      const projectDetails = [...document.querySelectorAll("[data-project-detail]")];
       const pageTitles = {
         home: "R.Nemirov",
         about: "About",
@@ -86,7 +117,36 @@
         brand.textContent = pageTitles[selectedTab];
         brand.setAttribute("aria-label", pageTitles[selectedTab]);
         document.title = pageTitles[selectedTab];
+
+        if (selectedTab !== "project") {
+          closeProjectDetail();
+        }
       }
+
+      function openProjectDetail(projectName) {
+        projectList.classList.remove("active");
+        projectDetails.forEach((detail) => {
+          const isSelected = detail.dataset.projectDetail === projectName;
+          detail.hidden = !isSelected;
+          detail.classList.toggle("active", isSelected);
+        });
+      }
+
+      function closeProjectDetail() {
+        projectList.classList.add("active");
+        projectDetails.forEach((detail) => {
+          detail.hidden = true;
+          detail.classList.remove("active");
+        });
+      }
+
+      document.querySelectorAll("[data-project-open]").forEach((trigger) => {
+        trigger.addEventListener("click", () => openProjectDetail(trigger.dataset.projectOpen));
+      });
+
+      document.querySelectorAll("[data-project-back]").forEach((trigger) => {
+        trigger.addEventListener("click", closeProjectDetail);
+      });
 
       tabTriggers.forEach((trigger) => {
         trigger.addEventListener("click", (event) => {
@@ -94,6 +154,9 @@
           const tabName = trigger.dataset.tab;
           history.replaceState(null, "", "#" + tabName);
           showTab(tabName);
+          if (tabName === "project") {
+            closeProjectDetail();
+          }
         });
       });
 
